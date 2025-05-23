@@ -6,6 +6,7 @@ import { Cloud, Droplet, History, Thermometer } from "lucide-react"
 import { RiverSidebar } from "@/components/river-sidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { defaultVal, getRiverData, RiverInfoType } from "@/scripts/apiRequests";
 
 // Mock data for rivers
 const rivers = [
@@ -63,75 +64,14 @@ const rivers = [
   },
 ]
 
-type ForecastItem = {
-  day: string;
-  condition: string;
-  high: number;
-  low: number;
-};
-
-type RiverInfoType = {
-  id: number,
-  name: string,
-  flowRate: number,
-  temperature: number,
-  lastYearFlow: number,
-  forecast: ForecastItem[],
-};
-
 export default function RiverDashboard() {
   const [selectedRiver, setSelectedRiver] = useState(rivers[0])
-  let defaultVal = {
-            "id": 1,
-            "name": "Error fetching river data",
-            "flowRate": 0,
-            "temperature": 0,
-            "lastYearFlow": 0,
-            "forecast": [
-              { day: "Today", condition: "Unknown", high: 0, low: 0 },
-            ],
-          }
   const [info, setInfo] = useState<RiverInfoType>(defaultVal);
 
-  async function getRiverData() {
-    try {
-      // get the river info
-      fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=13154500&siteStatus=all') // will want to get all sites and pass them in using the site
-        .then((response) => response.json()) // turn response into JSON
-        .then((data) => { // parse data
-          let riverInfo = {
-            "id": 1,
-            "name": data.value.timeSeries[0].sourceInfo.siteName,
-            "flowRate": data.value.timeSeries[1].values[0].value[0].value,
-            "temperature": data.value.timeSeries[0].values[0].value[0].value,
-            "lastYearFlow": 1000,
-            "forecast": [
-              { day: "Today", condition: "Rain", high: 60, low: 48 },
-              { day: "Tomorrow", condition: "Cloudy", high: 64, low: 50 },
-              { day: "Wednesday", condition: "Partly Cloudy", high: 68, low: 52 },
-            ],
-          }
-          setInfo(riverInfo);
-        });
-    }
-    catch(error) {
-      console.error("Error fetching river data: ", error);
-      let riverInfo = {
-            "id": 1,
-            "name": "Error fetching river data",
-            "flowRate": 0,
-            "temperature": 0,
-            "lastYearFlow": 0,
-            "forecast": [
-              { day: "Today", condition: "Unknown", high: 0, low: 0 },
-            ],
-          }
-          setInfo(riverInfo);
-    }
-  }
-
   useEffect(() => {
-    getRiverData();
+    getRiverData().then((data) => {
+      setInfo(data);
+    });
   }, []);
   
   return (
