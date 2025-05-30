@@ -6,7 +6,7 @@ import { Cloud, Droplet, History, Thermometer } from "lucide-react"
 import { RiverSidebar } from "@/components/river-sidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-import { defaultVal, getRiverData, RiverInfoType } from "@/scripts/apiRequests";
+import { getRiverData, RiverInfoType } from "@/scripts/apiRequests";
 
 // Mock data for rivers
 const rivers = [
@@ -65,12 +65,22 @@ const rivers = [
 ]
 
 export default function RiverDashboard() {
-  const [selectedRiver, setSelectedRiver] = useState(rivers[0])
-  const [info, setInfo] = useState<RiverInfoType>(defaultVal);
+  const [info, setInfo] = useState<{ siteName: string; value: RiverInfoType; }[]>([]);
+  const [currentRiverIndex, setCurrentRiverIndex] = useState(0);
+  const selectedRiver = info[currentRiverIndex]; // may need to wait until info is fully loaded
+
+  // Auto-cycle through rivers every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % rivers.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     getRiverData().then((data) => {
-      setInfo(data);
+      setInfo(Object.entries(data).map(([siteName, value]) => ({ siteName, value })));
     });
   }, []);
   
@@ -78,13 +88,12 @@ export default function RiverDashboard() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950">
       <SidebarProvider>
         <RiverSidebar
-          rivers={rivers}
-          selectedRiverId={selectedRiver.id}
-          onSelectRiver={(river) => setSelectedRiver(river)}
+          rivers={info}
+          selectedRiverId={selectedRiver.value.id}
         />
         <SidebarInset>
           <header className="border-b bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm p-4">
-            <h1 className="text-2xl font-bold text-blue-800 dark:text-blue-400">{info.name}</h1>
+            <h1 className="text-2xl font-bold text-blue-800 dark:text-blue-400">{selectedRiver.siteName}</h1>
           </header>
           <main className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -99,7 +108,7 @@ export default function RiverDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                    {info.flowRate} CFS
+                    {selectedRiver.value.flowRate} CFS
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Cubic feet per second (CFS) measures the volume of water passing a point in one second
@@ -118,7 +127,7 @@ export default function RiverDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                    {info.temperature}°C
+                    {selectedRiver.value.temperature}°C
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Water temperature affects oxygen levels and aquatic life
@@ -137,7 +146,7 @@ export default function RiverDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {info.forecast.map((day) => (
+                    {selectedRiver.value.forecast.map((day) => (
                       <div
                         key={day.day}
                         className="flex justify-between items-center border-b border-blue-100 dark:border-blue-900 pb-2"
@@ -164,15 +173,15 @@ export default function RiverDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                    {info.lastYearFlow} CFS
+                    {selectedRiver.value.lastYearFlow} CFS
                   </div>
                   <div className="mt-2 flex items-center">
                     <span
-                      className={`text-sm ${info.flowRate > info.lastYearFlow ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                      className={`text-sm ${selectedRiver.value.flowRate > selectedRiver.value.lastYearFlow ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
                     >
-                      {info.flowRate > info.lastYearFlow
-                        ? `+${info.flowRate - info.lastYearFlow} CFS increase`
-                        : `-${info.lastYearFlow - info.flowRate} CFS decrease`}
+                      {selectedRiver.value.flowRate > selectedRiver.value.lastYearFlow
+                        ? `+${selectedRiver.value.flowRate - selectedRiver.value.lastYearFlow} CFS increase`
+                        : `-${selectedRiver.value.lastYearFlow - selectedRiver.value.flowRate} CFS decrease`}
                       from last year
                     </span>
                   </div>
