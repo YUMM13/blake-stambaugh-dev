@@ -33,7 +33,7 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
 
       for (let index in dataList) {
         let entry = dataList[index];
-        let siteName = entry.sourceInfo.siteName;
+        let siteName = toNormalCase(entry.sourceInfo.siteName);
 
         // if we have not seen this site before, add it as a default value
         if (!riverInfo[siteName]) {
@@ -67,3 +67,24 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
 
     return riverInfo;
   }
+
+  /**
+   * helper function that converts a string into a normal case (the first letter of all words is capitalized)
+   * @param str the string to be converted
+   * @returns the normalized string
+   */
+  function toNormalCase(str: string) {
+  // Convert the string to lowercase and replace hyphens/underscores with spaces
+  let processedStr = str.toLowerCase();
+
+  // Split the string into words
+  let words = processedStr.split(' ');
+
+  // Capitalize the first letter of subsequent words
+  let camelCaseWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+
+  // Join the words back together
+  return camelCaseWords.join(' ');
+}
