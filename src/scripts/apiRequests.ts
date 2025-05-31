@@ -53,7 +53,8 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
           riverInfo[siteName].flowRate = entry.values[0].value[0].value;
         }
         else {
-          riverInfo[siteName].temperature = entry.values[0].value[0].value;
+          let temp = Math.floor(entry.values[0].value[0].value * (9/5) + 32);
+          riverInfo[siteName].temperature = temp;
         }
       }
     }

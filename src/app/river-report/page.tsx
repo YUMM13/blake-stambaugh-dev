@@ -10,7 +10,7 @@ import { getRiverData, RiverInfoType } from "@/scripts/apiRequests";
 
 export default function RiverDashboard() {
   const [info, setInfo] = useState<{ siteName: string; value: RiverInfoType; }[]>([]);
-  const [currentRiverIndex, setCurrentRiverIndex] = useState(0);
+  const [currentRiverIndex, setCurrentRiverIndex] = useState(1);
   const [lastUpdated, setlastUpdated] = useState("");
 
   useEffect(() => {
@@ -22,14 +22,14 @@ export default function RiverDashboard() {
   }, []);
 
   // Auto-cycle through rivers every 5 seconds
-  useEffect(() => {
-    if (info.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
-    }, 5000)
+  // useEffect(() => {
+  //   if (info.length === 0) return;
+  //   const interval = setInterval(() => {
+  //     setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
+  //   }, 5000)
 
-    return () => clearInterval(interval)
-  }, [info])
+  //   return () => clearInterval(interval)
+  // }, [info])
 
   if (info.length === 0) {
     return (<h1>loading info please wait</h1>)
@@ -78,8 +78,10 @@ export default function RiverDashboard() {
                   <CardDescription>Current reading</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                    {selectedRiver.value.temperature}°C
+                  <div>
+                    {selectedRiver.value.temperature != 0 ? 
+                      <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{selectedRiver.value.temperature}°F</p> : 
+                      <p className="text-2xl font-bole text-red-500">Water temperature is not available for this site</p>}
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Water temperature affects oxygen levels and aquatic life
