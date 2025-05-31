@@ -84,7 +84,9 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
   let camelCaseWords = words.map((word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
-
+  // capitalize the last two letters (for the states)
+  camelCaseWords[camelCaseWords.length - 1] = camelCaseWords[camelCaseWords.length - 1].toUpperCase();
+  
   // Join the words back together
   return camelCaseWords.join(' ');
 }

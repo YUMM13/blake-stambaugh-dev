@@ -22,14 +22,14 @@ export default function RiverDashboard() {
   }, []);
 
   // Auto-cycle through rivers every 5 seconds
-  // useEffect(() => {
-  //   if (info.length === 0) return;
-  //   const interval = setInterval(() => {
-  //     setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
-  //   }, 5000)
+  useEffect(() => {
+    if (info.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
+    }, 5000)
 
-  //   return () => clearInterval(interval)
-  // }, [info])
+    return () => clearInterval(interval)
+  }, [info])
 
   if (info.length === 0) {
     return (<h1>loading info please wait</h1>)
