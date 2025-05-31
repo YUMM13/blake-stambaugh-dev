@@ -8,82 +8,34 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { getRiverData, RiverInfoType } from "@/scripts/apiRequests";
 
-// Mock data for rivers
-const rivers = [
-  {
-    id: "2",
-    name: "Blue Creek",
-    flowRate: 450,
-    temperature: 62,
-    weather: "Sunny",
-    lastYearFlow: 520,
-    forecast: [
-      { day: "Today", condition: "Sunny", high: 75, low: 58 },
-      { day: "Tomorrow", condition: "Partly Cloudy", high: 73, low: 57 },
-      { day: "Wednesday", condition: "Sunny", high: 78, low: 59 },
-    ],
-  },
-  {
-    id: "3",
-    name: "Cedar River",
-    flowRate: 890,
-    temperature: 56,
-    weather: "Cloudy",
-    lastYearFlow: 750,
-    forecast: [
-      { day: "Today", condition: "Cloudy", high: 65, low: 52 },
-      { day: "Tomorrow", condition: "Rain", high: 62, low: 50 },
-      { day: "Wednesday", condition: "Partly Cloudy", high: 68, low: 53 },
-    ],
-  },
-  {
-    id: "4",
-    name: "Maple Stream",
-    flowRate: 320,
-    temperature: 60,
-    weather: "Sunny",
-    lastYearFlow: 290,
-    forecast: [
-      { day: "Today", condition: "Sunny", high: 74, low: 56 },
-      { day: "Tomorrow", condition: "Sunny", high: 76, low: 58 },
-      { day: "Wednesday", condition: "Partly Cloudy", high: 72, low: 55 },
-    ],
-  },
-  {
-    id: "5",
-    name: "Pine Creek",
-    flowRate: 680,
-    temperature: 54,
-    weather: "Rain",
-    lastYearFlow: 720,
-    forecast: [
-      { day: "Today", condition: "Rain", high: 60, low: 48 },
-      { day: "Tomorrow", condition: "Cloudy", high: 64, low: 50 },
-      { day: "Wednesday", condition: "Partly Cloudy", high: 68, low: 52 },
-    ],
-  },
-]
-
 export default function RiverDashboard() {
   const [info, setInfo] = useState<{ siteName: string; value: RiverInfoType; }[]>([]);
   const [currentRiverIndex, setCurrentRiverIndex] = useState(0);
-  const selectedRiver = info[currentRiverIndex]; // may need to wait until info is fully loaded
+  const [lastUpdated, setlastUpdated] = useState("");
+
+  useEffect(() => {
+    console.log("getting data...");
+    getRiverData(setlastUpdated).then((data) => {
+      let parsedData = Object.entries(data).map(([siteName, value]) => ({ siteName, value }));
+      setInfo(parsedData);
+    });
+  }, []);
 
   // Auto-cycle through rivers every 5 seconds
   useEffect(() => {
+    if (info.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % rivers.length)
+      setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [info])
 
-  useEffect(() => {
-    getRiverData().then((data) => {
-      setInfo(Object.entries(data).map(([siteName, value]) => ({ siteName, value })));
-    });
-  }, []);
+  if (info.length === 0) {
+    return (<h1>loading info please wait</h1>)
+  }
   
+  const selectedRiver = info[currentRiverIndex];
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950">
       <SidebarProvider>
@@ -191,10 +143,11 @@ export default function RiverDashboard() {
           </main>
         </SidebarInset>
         <footer className="fixed bottom-0 right-0 p-3 text-xs text-gray-500 dark:text-gray-400 bg-white/70 dark:bg-gray-950/70 backdrop-blur-sm rounded-tl-md border-t border-l border-green-200 dark:border-green-800">
-          <p>Last updated: 01/01/2025</p>
-          <p>Info is gathered from the USGS and NOAA, all information is provisional and may (although unlikely) be incorrect.</p>
+          <p>Last updated: {lastUpdated}</p>
+          <p>Info is gathered from the USGS and OpenMateo, all information is provisional and may (although unlikely) be incorrect.</p>
         </footer>
       </SidebarProvider>
     </div>
   )
 }
+
