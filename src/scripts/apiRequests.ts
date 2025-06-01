@@ -9,9 +9,9 @@ export type ForecastItem = {
 
 export type RiverInfoType = {
   id: number,
-  flowRate: number,
+  flowRate: string,
   temperature: number,
-  lastYearFlow: number,
+  lastYearFlow: string,
   forecast: ForecastItem[],
 };
 
@@ -39,9 +39,9 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
         if (!riverInfo[siteName]) {
           riverInfo[siteName] = {
             "id": id,
-            "flowRate": 0,
+            "flowRate": "0",
             "temperature": 0,
-            "lastYearFlow": 0,
+            "lastYearFlow": "0",
             "forecast": [
               { day: "Today", condition: "Unknown", high: 0, low: 0 },
             ],
@@ -54,6 +54,8 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
         }
         else {
           let temp = Math.floor(entry.values[0].value[0].value * (9/5) + 32);
+          // if water temp <= 0, then it is probably a mistake and should be excluded
+          if (temp <= 0 ? temp = 0 : 1)
           riverInfo[siteName].temperature = temp;
         }
       }
@@ -62,7 +64,27 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
         console.error("Error fetching river data: ", error);
     }
     // get historic water data
+    try {
+      // get the date a year ago from today
+      let date = new Date();
+      date.setFullYear(date.getFullYear() - 1)
+      let isoDate = date.toISOString().substring(0, 10);
 
+      // call api to get avg flow from 1 year ago today
+      const response = await fetch(`https://waterservices.usgs.gov/nwis/dv/?format=json&sites=09180000,09165000,09166500,09211200,09234500,09261000,09346400,09379500,09260050,09058000,09085100,09163500,09180500,09380000,09405500,09406000,09415000,13290450,13334300,13135000,13022500,13317000,13309220,13235000,13246000&statCd=00003&startDT=${isoDate}&endDT=${isoDate}&siteStatus=all&parameterCd=00060`);
+      const data = await response.json();
+      let dataList = data.value.timeSeries;
+
+      // update river info
+      for (let index in dataList) {
+        let entry = dataList[index];
+        let siteName = toNormalCase(entry.sourceInfo.siteName);
+        riverInfo[siteName].lastYearFlow = entry.values[0].value[0].value;
+      }
+    }
+    catch (error) {
+      console.error("Error fetching historic river data: ", error);
+    }
     // get weather forcast
 
     return riverInfo;
@@ -86,7 +108,7 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
   });
   // capitalize the last two letters (for the states)
   camelCaseWords[camelCaseWords.length - 1] = camelCaseWords[camelCaseWords.length - 1].toUpperCase();
-  
+
   // Join the words back together
   return camelCaseWords.join(' ');
 }

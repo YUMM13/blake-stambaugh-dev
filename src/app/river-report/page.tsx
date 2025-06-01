@@ -10,7 +10,7 @@ import { getRiverData, RiverInfoType } from "@/scripts/apiRequests";
 
 export default function RiverDashboard() {
   const [info, setInfo] = useState<{ siteName: string; value: RiverInfoType; }[]>([]);
-  const [currentRiverIndex, setCurrentRiverIndex] = useState(1);
+  const [currentRiverIndex, setCurrentRiverIndex] = useState(0);
   const [lastUpdated, setlastUpdated] = useState("");
 
   useEffect(() => {
@@ -123,21 +123,23 @@ export default function RiverDashboard() {
                     <History className="h-5 w-5" />
                     Historical Flow Rate
                   </CardTitle>
-                  <CardDescription>Same day last year</CardDescription>
+                  <CardDescription>Average from same day last year</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
                     {selectedRiver.value.lastYearFlow} CFS
                   </div>
-                  <div className="mt-2 flex items-center">
+                  <div className="mt-2 flex items-center"> 
+                    {/* curr = 805, prev = 3210 */}
                     <span
-                      className={`text-sm ${selectedRiver.value.flowRate > selectedRiver.value.lastYearFlow ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                      className={`text-sm ${parseFloat(selectedRiver.value.flowRate) > parseFloat(selectedRiver.value.lastYearFlow) ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
                     >
-                      {selectedRiver.value.flowRate > selectedRiver.value.lastYearFlow
-                        ? `+${selectedRiver.value.flowRate - selectedRiver.value.lastYearFlow} CFS increase`
-                        : `-${selectedRiver.value.lastYearFlow - selectedRiver.value.flowRate} CFS decrease`}
+                      {parseFloat(selectedRiver.value.flowRate) > parseFloat(selectedRiver.value.lastYearFlow)
+                        ? `+${Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow))} CFS increase `
+                        : `-${Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow))} CFS decrease `}
                       from last year
                     </span>
+                    {/* Math.abs(selectedRiver.value.flowRate - selectedRiver.value.lastYearFlow) */}
                   </div>
                 </CardContent>
               </Card>
