@@ -15,25 +15,25 @@ export type RiverInfoType = {
   forecast: ForecastItem[],
 };
 
-export async function getRiverData(setlastUpdated: { (value: SetStateAction<string>): void; (arg0: any): void; }) {
+export async function getRiverData(setlastUpdated: { (value: SetStateAction<string>): void; (arg0: string): void; }) {
     // initialize riverInfo to be a dictionary of river info where the key = site name and value = info
-    var riverInfo: { [siteName: string]: RiverInfoType } = {};
-    var id = 0;
+    const riverInfo: { [siteName: string]: RiverInfoType } = {};
+    let id = 0;
     try {
       // get the name, flowRate, and water temp
       const response = await fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09180000,09165000,09166500,09211200,09234500,09261000,09346400,09379500,09260050,09058000,09085100,09163500,09180500,09380000,09405500,09406000,09415000,13290450,13334300,13135000,13022500,13317000,13309220,13235000,13246000&siteStatus=active&parameterCd=00060,00010') // will want to get all sites and pass them in using the site
       
       // turn response into JSON
       const data = await response.json(); 
-      let dataList = data.value.timeSeries;
+      const dataList = data.value.timeSeries;
 
       // get last updated time
-      let date = dataList[0].values[0].value[0].dateTime;
+      const date = dataList[0].values[0].value[0].dateTime;
       setlastUpdated(date.substring(0, 10));
 
-      for (let index in dataList) {
-        let entry = dataList[index];
-        let siteName = toNormalCase(entry.sourceInfo.siteName);
+      for (const index in dataList) {
+        const entry = dataList[index];
+        const siteName = toNormalCase(entry.sourceInfo.siteName);
 
         // if we have not seen this site before, add it as a default value
         if (!riverInfo[siteName]) {
@@ -66,19 +66,19 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
     // get historic water data
     try {
       // get the date a year ago from today
-      let date = new Date();
+      const date = new Date();
       date.setFullYear(date.getFullYear() - 1)
-      let isoDate = date.toISOString().substring(0, 10);
+      const isoDate = date.toISOString().substring(0, 10);
 
       // call api to get avg flow from 1 year ago today
       const response = await fetch(`https://waterservices.usgs.gov/nwis/dv/?format=json&sites=09180000,09165000,09166500,09211200,09234500,09261000,09346400,09379500,09260050,09058000,09085100,09163500,09180500,09380000,09405500,09406000,09415000,13290450,13334300,13135000,13022500,13317000,13309220,13235000,13246000&statCd=00003&startDT=${isoDate}&endDT=${isoDate}&siteStatus=all&parameterCd=00060`);
       const data = await response.json();
-      let dataList = data.value.timeSeries;
+      const dataList = data.value.timeSeries;
 
       // update river info
-      for (let index in dataList) {
-        let entry = dataList[index];
-        let siteName = toNormalCase(entry.sourceInfo.siteName);
+      for (const index in dataList) {
+        const entry = dataList[index];
+        const siteName = toNormalCase(entry.sourceInfo.siteName);
         riverInfo[siteName].lastYearFlow = entry.values[0].value[0].value;
       }
     }
@@ -97,13 +97,13 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
    */
   function toNormalCase(str: string) {
   // Convert the string to lowercase and replace hyphens/underscores with spaces
-  let processedStr = str.toLowerCase();
+  const processedStr = str.toLowerCase();
 
   // Split the string into words
-  let words = processedStr.split(' ');
+  const words = processedStr.split(' ');
 
   // Capitalize the first letter of subsequent words
-  let camelCaseWords = words.map((word) => {
+  const camelCaseWords = words.map((word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
   // capitalize the last two letters (for the states)

@@ -16,7 +16,7 @@ export default function RiverDashboard() {
   useEffect(() => {
     console.log("getting data...");
     getRiverData(setlastUpdated).then((data) => {
-      let parsedData = Object.entries(data).map(([siteName, value]) => ({ siteName, value }));
+      const parsedData = Object.entries(data).map(([siteName, value]) => ({ siteName, value }));
       setInfo(parsedData);
     });
   }, []);
