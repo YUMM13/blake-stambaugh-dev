@@ -107,8 +107,8 @@ export default function RiverDashboard() {
                       >
                         <div className="font-medium">{day.day}</div>
                         <div className="text-gray-600 dark:text-gray-300">{day.condition}</div>
-                        <div className="text-sm">
-                          {day.high}°F / {day.low}°F
+                        <div className="text-sm flex gap-1">
+                          <p className="text-red-700">{day.high}°F</p> <span>/</span> <p className="text-blue-400">{day.low}°F</p>
                         </div>
                       </div>
                     ))}
@@ -135,8 +135,8 @@ export default function RiverDashboard() {
                       className={`text-sm ${parseFloat(selectedRiver.value.flowRate) > parseFloat(selectedRiver.value.lastYearFlow) ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
                     >
                       {parseFloat(selectedRiver.value.flowRate) > parseFloat(selectedRiver.value.lastYearFlow)
-                        ? `+${Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow))} CFS increase `
-                        : `-${Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow))} CFS decrease `}
+                        ? `+${Math.floor(Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow)))} CFS increase `
+                        : `-${Math.floor(Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow)))} CFS decrease `}
                       from last year
                     </span>
                     {/* Math.abs(selectedRiver.value.flowRate - selectedRiver.value.lastYearFlow) */}

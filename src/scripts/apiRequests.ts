@@ -20,10 +20,9 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
     // initialize riverInfo to be a dictionary of river info where the key = site name and value = info
     const riverInfo: { [siteName: string]: RiverInfoType } = {};
     const siteInfo = new Array();
-    let id = 0;
 
     // get current river info and update river info
-    await getSiteData(setlastUpdated, riverInfo, id, siteInfo);
+    await getSiteData(setlastUpdated, riverInfo, siteInfo);
     
     // get historic water data and update river info
     await getHistoricData(riverInfo);
@@ -32,7 +31,7 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
     await getWeatherData(riverInfo, siteInfo);
     
     return riverInfo;
-    }
+  }
 
   /**
    * helper function that converts a string into a normal case (the first letter of all words is capitalized)
@@ -51,12 +50,22 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
   // capitalize the last two letters (for the states)
-  camelCaseWords[camelCaseWords.length - 1] = camelCaseWords[camelCaseWords.length - 1].toUpperCase();
+  for (let w in camelCaseWords) {
+    let word = camelCaseWords[w];
+    if (word === "Id" || word === "Co" || word === "Ut" || word === "Az" || word === "Wy" || word === "Wa") {
+      camelCaseWords[w] = word.toUpperCase();
+    }
+  }
 
   // Join the words back together
   return camelCaseWords.join(' ');
 }
 
+/**
+ * helper function that gets translates the weather code retrieved from the OpenMeteo API into its weather descriptions
+ * @param code an int that represents the weather
+ * @returns the correct weather description
+ */
 function getWeatherDescription(code: number) {
   const weatherDescriptions: Record<number, string> = {
     0: "Clear sky",
@@ -92,7 +101,11 @@ function getWeatherDescription(code: number) {
   return weatherDescriptions[code] || "Unknown weather code";
 }
 
-
+/**
+ * uses the OpenMeteo API to get weather info near the river sites
+ * @param riverInfo the dictionary that keeps track of river info
+ * @param siteInfo a list of coords and site names used for the API call and adding the forecast to the correct site
+ */
 async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: any[]) {
   // get current date and date 2 days from now to be used in API call
   const startDate = new Date().toISOString().substring(0,10);
@@ -128,8 +141,8 @@ async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, 
     const temperature2mMin = daily.variables(1)!.valuesArray()!;
     const weatherCode = daily.variables(2)!.valuesArray()!;
     const time = [...Array((Number(daily.timeEnd()) - Number(daily.time())) / daily.interval())].map(
-              (_, i) => new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000).toDateString().substring(0,3)
-		        );
+			(_, i) => new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000).toUTCString().substring(0,3)
+		);
 
     // build forecast item
     const forecastItems = new Array<ForecastItem>(3);
@@ -140,16 +153,21 @@ async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, 
         "high": Math.floor(temperature2mMax[i]),
         "low": Math.floor(temperature2mMin[i])
       }
-      forecastItems[index] = f;
+      forecastItems[i] = f;
     }
 
     let name = siteInfo[index][2];
-    console.log(siteInfo[index]);
     riverInfo[name].forecast = forecastItems;
   }
 }
 
-async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { [siteName: string]: RiverInfoType }, id: number, siteInfo: any[]) {
+/**
+ * uses the USGS API to get basic site info like name, coords, flow rate, and water temp
+ * @param setlastUpdated used to set when the river info was last updated on the website
+ * @param riverInfo dictionary that will track site info
+ * @param siteInfo empty array that will hold each site's coords and name
+ */
+async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: any[]) {
   try {
     // get the name, flowRate, and water temp
     const response = await fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09180000,09165000,09166500,09211200,09234500,09261000,09346400,09379500,09260050,09058000,09085100,09163500,09180500,09380000,09405500,09406000,09415000,13290450,13334300,13135000,13022500,13317000,13309220,13235000,13246000&siteStatus=active&parameterCd=00060,00010')
@@ -161,6 +179,8 @@ async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { 
     // get last updated time
     const date = dataList[0].values[0].value[0].dateTime;
     setlastUpdated(date.substring(0, 10));
+
+    let id = 0;
     
     for (const index in dataList) {
       const entry = dataList[index];
@@ -201,6 +221,10 @@ async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { 
   }
 }
 
+/**
+ * Uses the USGS API to get the historic info about a river, specifically what the average flow rate for a river was 1 year ago today
+ * @param riverInfo dictionary that will track site info
+ */
 async function getHistoricData(riverInfo: { [siteName: string]: RiverInfoType }) {
   try {
       // get the date a year ago from today
@@ -224,7 +248,3 @@ async function getHistoricData(riverInfo: { [siteName: string]: RiverInfoType })
       console.error("Error fetching historic river data: ", error);
     }
 }
-
-// "latitude": [40.03665248, 39.5549819, 39.13276047, 37.63888428, 37.47249296, 38.79720805, 38.81054095, 42.0209722, 40.90829296, 40.45163387, 40.4093915, 37.01361667, 37.15067778, 36.8643333, 37.2097046, 37.2041494, 36.8916437, 43.1961111, 42.84851319, 44.08527778, 44.11416667, 45.2544444, 44.7215194, 45.75027778, 46.09706985],
-//     "longitude": [-106.4400324, -107.337554, -109.0270546, -108.0603517, -108.4975908, -109.1951142, -109.2934493, -110.0498056, -109.422914, -108.525101, -109.2354283, -107.312267, -109.8666889, -111.5878722, -112.9785512, -113.1807789, -113.9244098, -110.8894444, -114.9014473, -115.6222222, -116.1072222, -116.6969444, -115.0143472, -116.3238889, -116.9776916],
-    

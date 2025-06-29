@@ -12,21 +12,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { RiverInfoType } from "@/scripts/apiRequests";
-
-// type River = {
-//   id: string
-//   name: string
-//   flowRate: number
-//   temperature: number
-//   weather: string
-//   lastYearFlow: number
-//   forecast: Array<{
-//     day: string
-//     condition: string
-//     high: number
-//     low: number
-//   }>
-// }
+import { useEffect, useRef } from "react";
 
 interface RiverSidebarProps {
   rivers: { siteName: string; value: RiverInfoType; }[]
@@ -34,6 +20,18 @@ interface RiverSidebarProps {
 }
 
 export function RiverSidebar({ rivers, selectedRiverId }: RiverSidebarProps) {
+  const activeItemRef = useRef<HTMLDivElement>(null)
+
+  // Scroll to the active river when selection changes
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      })
+    }
+  }, [selectedRiverId])
+  
   return (
     <Sidebar className="border-r border-blue-200 dark:border-blue-800">
       <SidebarHeader className="border-b border-green-200 dark:border-green-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm">
@@ -49,15 +47,17 @@ export function RiverSidebar({ rivers, selectedRiverId }: RiverSidebarProps) {
         <SidebarMenu>
           {rivers.map((river) => (
             <SidebarMenuItem key={river.value.id}>
-              <SidebarMenuButton
-                isActive={river.value.id === selectedRiverId}
-                className="hover:bg-green-100 dark:hover:bg-green-900/30 data-[active=true]:bg-green-200 dark:data-[active=true]:bg-green-800/40 py-6 px-4"
-              >
-                <div className="flex flex-col">
-                  <span className="font-medium">{river.siteName}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{river.value.flowRate} CFS</span>
-                </div>
-              </SidebarMenuButton>
+              <div ref={river.value.id === selectedRiverId ? activeItemRef : null}>
+                <SidebarMenuButton
+                  isActive={river.value.id === selectedRiverId}
+                  className="hover:bg-green-100 dark:hover:bg-green-900/30 data-[active=true]:bg-green-200 dark:data-[active=true]:bg-green-800/40 py-6 px-4"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{river.siteName}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{river.value.flowRate} CFS</span>
+                  </div>
+                </SidebarMenuButton>
+              </div>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
