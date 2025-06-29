@@ -12,13 +12,16 @@ export default function RiverDashboard() {
   const [info, setInfo] = useState<{ siteName: string; value: RiverInfoType; }[]>([]);
   const [currentRiverIndex, setCurrentRiverIndex] = useState(0);
   const [lastUpdated, setlastUpdated] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     console.log("getting data...");
-    getRiverData(setlastUpdated).then((data) => {
+    getRiverData(setlastUpdated)
+    .then((data) => {
       const parsedData = Object.entries(data).map(([siteName, value]) => ({ siteName, value }));
       setInfo(parsedData);
-    });
+    })
+    .catch(setError);
   }, []);
 
   // Auto-cycle through rivers every 5 seconds
@@ -33,6 +36,15 @@ export default function RiverDashboard() {
 
   if (info.length === 0) {
     return (<h1>loading info please wait</h1>)
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h1>Something went wrong.</h1>
+        <p>{error}</p>
+      </div>
+  );
   }
   
   const selectedRiver = info[currentRiverIndex];
