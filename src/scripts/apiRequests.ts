@@ -16,10 +16,12 @@ export type RiverInfoType = {
   forecast: ForecastItem[],
 };
 
+type siteInfoType = [string, string, string];
+
 export async function getRiverData(setlastUpdated: { (value: SetStateAction<string>): void; (arg0: string): void; }) {
     // initialize riverInfo to be a dictionary of river info where the key = site name and value = info
     const riverInfo: { [siteName: string]: RiverInfoType } = {};
-    const siteInfo = new Array();
+    const siteInfo = new Array<siteInfoType>();
 
     // get current river info and update river info
     await getSiteData(setlastUpdated, riverInfo, siteInfo);
@@ -50,8 +52,8 @@ export async function getRiverData(setlastUpdated: { (value: SetStateAction<stri
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
   // capitalize the last two letters (for the states)
-  for (let w in camelCaseWords) {
-    let word = camelCaseWords[w];
+  for (const w in camelCaseWords) {
+    const word = camelCaseWords[w];
     if (word === "Id" || word === "Co" || word === "Ut" || word === "Az" || word === "Wy" || word === "Wa") {
       camelCaseWords[w] = word.toUpperCase();
     }
@@ -106,10 +108,10 @@ function getWeatherDescription(code: number) {
  * @param riverInfo the dictionary that keeps track of river info
  * @param siteInfo a list of coords and site names used for the API call and adding the forecast to the correct site
  */
-async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: any[]) {
+async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: siteInfoType[]) {
   // get current date and date 2 days from now to be used in API call
   const startDate = new Date().toISOString().substring(0,10);
-  let temp = new Date();
+  const temp = new Date();
   temp.setDate(temp.getDate() + 2);
   const endDate = temp.toISOString().substring(0,10);
 
@@ -147,7 +149,7 @@ async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, 
     // build forecast item
     const forecastItems = new Array<ForecastItem>(3);
     for (let i = 0; i < 3; i++) {
-      var f: ForecastItem = {
+      const f: ForecastItem = {
         "day": time[i],
         "condition": getWeatherDescription(weatherCode[i]),
         "high": Math.floor(temperature2mMax[i]),
@@ -156,7 +158,7 @@ async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, 
       forecastItems[i] = f;
     }
 
-    let name = siteInfo[index][2];
+    const name = siteInfo[index][2];
     riverInfo[name].forecast = forecastItems;
   }
 }
@@ -167,7 +169,7 @@ async function getWeatherData(riverInfo: { [siteName: string]: RiverInfoType }, 
  * @param riverInfo dictionary that will track site info
  * @param siteInfo empty array that will hold each site's coords and name
  */
-async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: any[]) {
+async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { [siteName: string]: RiverInfoType }, siteInfo: siteInfoType[]) {
   try {
     // get the name, flowRate, and water temp
     const response = await fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09180000,09165000,09166500,09211200,09234500,09261000,09346400,09379500,09260050,09058000,09085100,09163500,09180500,09380000,09405500,09406000,09415000,13290450,13334300,13135000,13022500,13317000,13309220,13235000,13246000&siteStatus=active&parameterCd=00060,00010')
@@ -189,8 +191,8 @@ async function getSiteData(setlastUpdated: (arg0: string) => void, riverInfo: { 
       // if we have not seen this site before, add it as a default value
       if (!riverInfo[siteName]) {
         // bind lat and long to site name for weather later
-        let lat = entry.sourceInfo.geoLocation.geogLocation.latitude;
-        let long = entry.sourceInfo.geoLocation.geogLocation.longitude;
+        const lat = entry.sourceInfo.geoLocation.geogLocation.latitude;
+        const long = entry.sourceInfo.geoLocation.geogLocation.longitude;
         siteInfo.push([lat, long, siteName]);
 
         riverInfo[siteName] = {
