@@ -41,6 +41,7 @@ export function RiverSidebar({ rivers, selectedRiverId }: RiverSidebarProps) {
             The River Report
           </h2>
           <p className="text-lg text-gray-500 dark:text-gray-400">Local waterways status</p>
+          <p className="text-sm text-gray-500">By Blake Stambaugh</p>
         </div>
       </SidebarHeader>
       <SidebarContent className="bg-white/60 dark:bg-gray-950/60 backdrop-blur-sm">

@@ -26,7 +26,7 @@ export default function RiverDashboard() {
     if (info.length === 0) return;
     const interval = setInterval(() => {
       setCurrentRiverIndex((prevIndex) => (prevIndex + 1) % info.length)
-    }, 5000)
+    }, 8000)
 
     return () => clearInterval(interval)
   }, [info])
@@ -130,7 +130,6 @@ export default function RiverDashboard() {
                     {selectedRiver.value.lastYearFlow} CFS
                   </div>
                   <div className="mt-2 flex items-center"> 
-                    {/* curr = 805, prev = 3210 */}
                     <span
                       className={`text-sm ${parseFloat(selectedRiver.value.flowRate) > parseFloat(selectedRiver.value.lastYearFlow) ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
                     >
@@ -139,7 +138,6 @@ export default function RiverDashboard() {
                         : `-${Math.floor(Math.abs(parseFloat(selectedRiver.value.flowRate) - parseFloat(selectedRiver.value.lastYearFlow)))} CFS decrease `}
                       from last year
                     </span>
-                    {/* Math.abs(selectedRiver.value.flowRate - selectedRiver.value.lastYearFlow) */}
                   </div>
                 </CardContent>
               </Card>
