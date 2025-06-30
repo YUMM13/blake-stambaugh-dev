@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   basePath: '/blake-stambaugh-dev',
+  assetPrefix: '/blake-stambaugh-dev/',
 };
 
 export default nextConfig;
