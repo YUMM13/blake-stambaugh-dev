@@ -7,24 +7,23 @@ import ContactButton from "./contact-button"
 export function AboutSection() {
   return (
     <section className="min-h-screen bg-background py-16">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex h-screen justify-between gap-12">
           {/* Profile Image */}
-          <div className="flex justify-center lg:justify-start flex-grow">
+          <div className="flex justify-center align-middle lg:justify-start flex-grow">
             <div className="relative">
               <Image
                 src="/headshot.JPG"
                 alt="Profile photo"
-                className="rounded-2xl object-cover shadow-lg"
-                width={400}
-                height={80}
+                className="rounded-2xl object-cover shadow-lg w-full min-w-[150px]"
+                height={250}
+                width={200}
               />
-              <div className="absolute inset-0 rounded-2xl bg-primary/10"></div>
             </div>
           </div>
 
           {/* About Content */}
-          <div className="space-y-6">
+          <div className="flex gap-6 flex-col flex-grow">
             <div>
               <h2 className="text-4xl font-bold text-foreground mb-4">
                 Hi, I'm <span className="text-primary">Blake Stambaugh</span>
@@ -43,7 +42,7 @@ export function AboutSection() {
             </div>
 
             {/* Skills */}
-            <Card>
+            <Card className="bg-gray-100">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Key Skills</h3>
                 <div className="flex flex-wrap gap-2">
