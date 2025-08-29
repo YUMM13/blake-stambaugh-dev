@@ -7,11 +7,11 @@ export default function ContactButton() {
   useEffect(() => {
     // Ensure reCAPTCHA script has loaded before binding
     const timer = setInterval(() => {
-      // @ts-ignore
-      if (window.grecaptcha && window.grecaptcha.render) {
+      // @ts-expect-error ts doesn't like captcha, this prevents issues
+      if (window.grecaptcha && window.grecaptcha.render) { 
         clearInterval(timer)
         // render invisible reCAPTCHA in background
-        // @ts-ignore
+        // @ts-expect-error ts doesn't like captcha, this prevents issues
         window.grecaptcha.render("recaptcha-container", {
           sitekey: "6LfHO7YrAAAAANhu21ibFjOR4MTJRcLN3Rmy_-1F",
           size: "invisible",
@@ -24,10 +24,10 @@ export default function ContactButton() {
   }, [])
 
   function handleClick() {
-    // @ts-ignore
+    // @ts-expect-error ts doesn't like captcha, this prevents issues
     if (window.grecaptcha) {
-      // @ts-ignore
-      window.grecaptcha.execute()
+      // @ts-expect-error ts doesn't like captcha, this prevents issues
+      window.grecaptcha.execute() 
     }
   }
 

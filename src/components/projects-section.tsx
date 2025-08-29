@@ -68,7 +68,7 @@ export function ProjectsSection() {
             My <span className="text-primary">Projects</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Here are some of the projects I've worked on. Each one represents a unique challenge and learning experience
+            Here are some of the projects I&apos;ve worked on. Each one represents a unique challenge and learning experience
             in my development journey.
           </p>
         </div>

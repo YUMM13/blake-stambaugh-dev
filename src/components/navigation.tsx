@@ -11,7 +11,7 @@ export function Navigation({ activeSection, onSectionChange }: NavigationProps) 
     <nav className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-primary-foreground">Blake Stambaugh's Developer Portfolio</h1>
+          <h1 className="text-xl font-bold text-primary-foreground">Blake Stambaugh&apos;s Developer Portfolio</h1>
           <div className="flex gap-2">
             <Button
               variant={activeSection === "about" ? "secondary" : "ghost"}

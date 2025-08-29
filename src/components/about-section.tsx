@@ -26,10 +26,10 @@ export function AboutSection() {
           <div className="flex gap-6 flex-col flex-grow">
             <div>
               <h2 className="text-4xl font-bold text-foreground mb-4">
-                Hi, I'm <span className="text-primary">Blake Stambaugh</span>
+                Hi, I&apos;m <span className="text-primary">Blake Stambaugh</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                I graduated from the University of Utah with a Bachelor's degree in Computer Science and I am actively pursuing a career in
+                I graduated from the University of Utah with a Bachelor&apos;s degree in Computer Science and I am actively pursuing a career in
                 software development. Throughout my time in college, I worked on a variety of different projects from websites to dashboards.
 
                 My most recent project is The River Report, an online dashboard that displays important river information for customers 
@@ -37,7 +37,7 @@ export function AboutSection() {
                 that will collect dust on a resume forever.
 
                 In the future, I hope to be creating more amazing projects that will help others strive. I hope that I can create solutions for 
-                people's problems and help their business to succeed.
+                people&apos;s problems and help their business to succeed.
               </p>
             </div>
 
