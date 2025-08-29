@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
-import { IoMail } from "react-icons/io5"
+import ContactButton from "./contact-button"
 
 export function AboutSection() {
   return (
@@ -10,13 +10,13 @@ export function AboutSection() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Profile Image */}
-          <div className="flex justify-center lg:justify-start">
+          <div className="flex justify-center lg:justify-start flex-grow">
             <div className="relative">
               <Image
                 src="/headshot.JPG"
                 alt="Profile photo"
                 className="rounded-2xl object-cover shadow-lg"
-                width={300}
+                width={400}
                 height={80}
               />
               <div className="absolute inset-0 rounded-2xl bg-primary/10"></div>
@@ -30,7 +30,15 @@ export function AboutSection() {
                 Hi, I'm <span className="text-primary">Blake Stambaugh</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Basic info about me
+                I graduated from the University of Utah with a Bachelor's degree in Computer Science and I am actively pursuing a career in
+                software development. Throughout my time in college, I worked on a variety of different projects from websites to dashboards.
+
+                My most recent project is The River Report, an online dashboard that displays important river information for customers 
+                at Outdoor Adventures. I like to build projects that solve real world problems and actually help people, rather than projects
+                that will collect dust on a resume forever.
+
+                In the future, I hope to be creating more amazing projects that will help others strive. I hope that I can create solutions for 
+                people's problems and help their business to succeed.
               </p>
             </div>
 
@@ -51,21 +59,19 @@ export function AboutSection() {
             {/* Social Links */}
             <div className="flex gap-4">
               <Button size="lg" className="flex items-center gap-2" asChild>
-                <a href="https://github.com/YUMM13">
+                <a href="https://github.com/YUMM13" target="_blank">
                   <FaGithub className="w-5 h-5" />
                   GitHub
                 </a>
               </Button>
               <Button size="lg" variant="outline" className="flex items-center gap-2 bg-transparent" asChild>
-                <a href="https://www.linkedin.com/in/blake-stambaugh">
+                <a href="https://www.linkedin.com/in/blake-stambaugh" target="_blank">
                   <FaLinkedin className="w-5 h-5" />
                   LinkedIn
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="flex items-center gap-2 bg-transparent">
-                <IoMail className="w-5 h-5" />
-                Contact
-              </Button>
+              {/* contact me button */}
+              <ContactButton/>
             </div>
           </div>
         </div>
