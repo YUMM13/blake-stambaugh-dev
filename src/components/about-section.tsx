@@ -13,7 +13,7 @@ export function AboutSection() {
           <div className="flex justify-center align-middle lg:justify-start flex-grow">
             <div className="relative">
               <Image
-                src="/headshot.JPG"
+                src="./headshot.JPG"
                 alt="Profile photo"
                 className="rounded-2xl object-cover shadow-lg w-full min-w-[150px]"
                 height={250}

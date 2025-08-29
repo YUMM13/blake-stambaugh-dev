@@ -17,7 +17,7 @@ const projects: Project[] = [
     title: "The River Report",
     description:
       "A dashboard that displays key river information like flow rate, weather forecast, and historic data for customers at Outdoor Adventures.",
-    image: "/river report.png",
+    image: "./river report.png",
     githubUrl: "https://yumm13.github.io/blake-stambaugh-dev/river-report",
     technologies: ["React", "Next.js", "OpenMeteo API", "USGS API", "TypeScript", "TailwindCSS"],
   },
@@ -26,7 +26,7 @@ const projects: Project[] = [
     title: "ResearchFlow",
     description:
       "A mobile app that enables researchers at the University of Utah's Land-Atmosphere Interactions Research (LAIR) group to upload data to the cloud from field sites.",
-    image: "/research flow.png",
+    image: "./research flow.png",
     githubUrl: "https://github.com/YUMM13/Researchflow",
     technologies: ["React Native", "TypeScript", "APIs", "GitHub Authentication", "CI/CD Pipeline"],
   },
@@ -35,7 +35,7 @@ const projects: Project[] = [
     title: "Learning Management Website",
     description:
       "A Learning Management Website similar to Canvas I built as a Fullstack Engineer",
-    image: "/lms website.png",
+    image: "./lms website.png",
     githubUrl: "https://github.com/University-of-Utah-CS3550/a2-css-layouts-YUMM13",
     technologies: ["Python", "Django", "JavaScript", "HTML/CSS", "AWS"],
   },
@@ -44,7 +44,7 @@ const projects: Project[] = [
     title: "Portfolio Website",
     description:
       "A modern, responsive portfolio website showcasing projects and skills (what you are looking at right now!).",
-    image: "/personal site.png",
+    image: "./personal site.png",
     githubUrl: "https://github.com/YUMM13/blake-stambaugh-dev",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel's v0"],
   },
@@ -53,7 +53,7 @@ const projects: Project[] = [
     title: "Ruby Webscraper",
     description:
       "A webscraper powered by Ruby that pulls repository information for a specific GitHub organization.",
-    image: "/ruby scraper.png",
+    image: "./ruby scraper.png",
     githubUrl: "https://github.com/YUMM13/ruby-scraper-and-sql",
     technologies: ["Ruby", "Webscrapting", "GitHub API", "SQLite", "ETL Pipelines"],
   },
