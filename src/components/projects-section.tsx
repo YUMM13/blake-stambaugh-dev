@@ -14,33 +14,15 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    title: "The River Report",
+    title: "Cat Finder",
     description:
-      "A dashboard that displays key river information like flow rate, weather forecast, and historic data for customers at Outdoor Adventures.",
-    image: "./river report.png",
-    githubUrl: "https://yumm13.github.io/blake-stambaugh-dev/river-report",
-    technologies: ["React", "Next.js", "OpenMeteo API", "USGS API", "TypeScript", "TailwindCSS"],
+      "An image processing system that automatically finds any cats in the image built using the cloud.",
+    image: "./Cat Finder.drawio.png",
+    githubUrl: "https://github.com/YUMM13/cat-finder",
+    technologies: ["AWS", "Python", "JavaScript", "Data Pipeline", "Image Recognition"],
   },
   {
     id: 2,
-    title: "ResearchFlow",
-    description:
-      "A mobile app that enables researchers at the University of Utah's Land-Atmosphere Interactions Research (LAIR) group to upload data to the cloud from field sites.",
-    image: "./research flow.png",
-    githubUrl: "https://github.com/YUMM13/Researchflow",
-    technologies: ["React Native", "TypeScript", "APIs", "GitHub Authentication", "CI/CD Pipeline"],
-  },
-  {
-    id: 3,
-    title: "Learning Management Website",
-    description:
-      "A Learning Management Website similar to Canvas I built as a Fullstack Engineer",
-    image: "./lms website.png",
-    githubUrl: "https://github.com/University-of-Utah-CS3550/a2-css-layouts-YUMM13",
-    technologies: ["Python", "Django", "JavaScript", "HTML/CSS", "AWS"],
-  },
-  {
-    id: 4,
     title: "Portfolio Website",
     description:
       "A modern, responsive portfolio website showcasing projects and skills (what you are looking at right now!).",
@@ -49,13 +31,40 @@ const projects: Project[] = [
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel's v0"],
   },
   {
-    id: 5,
+    id: 3,
+    title: "The River Report",
+    description:
+      "A dashboard that displays key river information like flow rate, weather forecast, and historic data for customers at Outdoor Adventures.",
+    image: "./river report.png",
+    githubUrl: "https://yumm13.github.io/blake-stambaugh-dev/river-report",
+    technologies: ["React", "Next.js", "OpenMeteo API", "USGS API", "TypeScript", "TailwindCSS"],
+  },
+  {
+    id: 4,
     title: "Ruby Webscraper",
     description:
       "A webscraper powered by Ruby that pulls repository information for a specific GitHub organization.",
     image: "./ruby scraper.png",
     githubUrl: "https://github.com/YUMM13/ruby-scraper-and-sql",
     technologies: ["Ruby", "Webscrapting", "GitHub API", "SQLite", "ETL Pipelines"],
+  },
+  {
+    id: 5,
+    title: "ResearchFlow",
+    description:
+      "A mobile app that enables researchers at the University of Utah's Land-Atmosphere Interactions Research (LAIR) group to upload data to the cloud from field sites.",
+    image: "./research flow.png",
+    githubUrl: "https://github.com/YUMM13/Researchflow",
+    technologies: ["React Native", "TypeScript", "APIs", "GitHub Authentication", "CI/CD Pipeline"],
+  },
+  {
+    id: 6,
+    title: "Learning Management Website",
+    description:
+      "A Learning Management Website similar to Canvas I built as a Fullstack Engineer",
+    image: "./lms website.png",
+    githubUrl: "https://github.com/University-of-Utah-CS3550/a2-css-layouts-YUMM13",
+    technologies: ["Python", "Django", "JavaScript", "HTML/CSS", "AWS"],
   },
 ]
 
